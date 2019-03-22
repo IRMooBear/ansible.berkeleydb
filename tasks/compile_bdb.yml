@@ -22,7 +22,7 @@
     group: "{{ ansible_user }}"
 - name: configure bdb
   become: no
-  command: ../dist/configure {{ '--enable-cxx' if bdb_cxx else '' }} {{ '--disable-shared' if not bdb_share else '' }} {{ '--with-pic' if bdb_pic else '' }} --prefix={{ bdb_prefix }}
+  command: ../dist/configure {{ '--enable-cxx' if bdb_cxx else '' }} {{ '--disable-shared' if not bdb_shared else '' }} {{ '--with-pic' if bdb_pic else '' }} --prefix={{ bdb_prefix }}
   args:
     chdir: /usr/local/src/db-{{ bdb_version }}/build_unix
 - name: make bdb
