@@ -1,0 +1,8 @@
+---
+# tasks file for roles/berkeleydb
+- name: check bdb exists
+  stat:
+    path: "{{ bdb_prefix }}/bin/db_stat"
+  register: bdb_check
+- import_tasks: compile_bdb.yml
+  when: not bdb_check.stat.exists

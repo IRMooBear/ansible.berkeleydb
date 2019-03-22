@@ -1,0 +1,8 @@
+---
+# defaults file for roles/berkeleydb
+bdb_version: 5.1.29
+bdb_checksum: md5:a94ea755ab695bc04f82b94d2e24a1ef
+bdb_prefix: /usr/local/BerkeleyDB.5.1
+bdb_share: no
+bdb_cxx: yes
+bdb_pic: yes

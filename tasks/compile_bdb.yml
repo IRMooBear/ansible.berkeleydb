@@ -1,0 +1,42 @@
+---
+- name: check bdb file exists
+  stat:
+    path: /usr/local/src/db-{{ bdb_version }}.tar.gz
+  register: bdb_file
+- name: download bdb
+  become: yes
+  get_url:
+    url: http://download.oracle.com/berkeley-db/db-{{ bdb_version }}.tar.gz
+    dest: /usr/local/src/db-{{ bdb_version }}.tar.gz
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    checksum: "{{ bdb_checksum }}"
+  when: not bdb_file.stat.exists
+- name: extract bdb
+  become: yes
+  unarchive:
+    remote_src: yes
+    src: /usr/local/src/db-{{ bdb_version }}.tar.gz
+    dest: /usr/local/src/
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+- name: configure bdb
+  become: no
+  command: ../dist/configure {{ '--enable-cxx' if bdb_cxx else '' }} {{ '--disable-shared' if not bdb_share else '' }} {{ '--with-pic' if bdb_pic else '' }} --prefix={{ bdb_prefix }}
+  args:
+    chdir: /usr/local/src/db-{{ bdb_version }}/build_unix
+- name: make bdb
+  become: no
+  make:
+    target: all
+    params:
+      MAKEFLAGS: -j{{ compile_threads }}
+      NUM_THREADS: "{{ compile_threads }}"
+  args:
+    chdir: /usr/local/src/db-{{ bdb_version }}/build_unix
+- name: install bdb
+  become: yes
+  make:
+    target: install
+  args:
+    chdir: /usr/local/src/db-{{ bdb_version }}/build_unix
