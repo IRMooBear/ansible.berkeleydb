@@ -51,6 +51,9 @@ galaxy_info:
     - name: Debian
       versions:
         - stretch
+    - name: RedHat
+      versions:
+        - centos
 
   galaxy_tags:
     - database
